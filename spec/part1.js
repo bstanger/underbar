@@ -346,7 +346,20 @@
         var iterator = function(value) { return value === 1; };
         var numbers = [1, 2, 2, 3, 4, 4];
 
-        expect(_.uniq(FILL_ME_IN)).to.eql([1, 2]);
+        expect(_.uniq(numbers, true, iterator)).to.eql([1, 2]);
+      });
+
+
+      it('should handle sorted arrays without iterators', function() {
+        var numbers = [40, 42, 42, 53, 55, 55];
+
+        expect(_.uniq(numbers, true)).to.eql([40, 42, 53, 55]);
+      });
+
+      it('should verify isSorted parameter is correct', function() {
+        var numbers = [46, 42, 42, 53, 55, 55];
+
+        expect(_.uniq(numbers, true)).to.eql("Error - isSorted parameter is incorrect");
       });
 
       it('should produce a brand new array instead of modifying the input array', function() {
