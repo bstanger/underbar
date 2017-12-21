@@ -58,9 +58,7 @@
     // For array
     if(Array.isArray(collection)){
       for(var i = 0; i < collection.length; i++){
-        // console.log("In each, iterator: " + iterator);
         iterator(collection[i], i, collection);
-        // console.log(iterator(collection[i], i, collection));
       }
 
     // For object
@@ -169,6 +167,23 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+
+    let results = [];
+
+    // For array
+    if(Array.isArray(collection)){
+      for(var i = 0; i < collection.length; i++){
+        results.push(iterator(collection[i], i, collection));
+      }
+
+    // For object
+    } else {
+      for (var key in collection){
+        results.push(iterator(collection[key], key, collection));
+      }
+    }
+
+    return results;
   };
 
   /*
@@ -177,7 +192,7 @@
    * as an example of this.
    */
 
-  // Takes an array of objects and returns and array of the values of
+  // Takes an array of objects and returns an array of the values of
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(collection, key) {
@@ -210,6 +225,35 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+
+    // For array
+    if(Array.isArray(collection)){
+      var i = 0;
+      if(!accumulator && accumulator !== 0){
+        i = 1;
+        accumulator = collection[0];
+      }
+      for(i; i < collection.length; i++){
+        accumulator = iterator(accumulator, collection[i]);
+      }
+
+    // For object
+    } else {
+      let firstParameter = true;
+      for (var key in collection){
+        if(firstParameter){
+          if(!accumulator && accumulator !== 0){
+            accumulator = collection[key];
+            // Note: not sure if the value is intended to be accumulator for an object w/o an accumulator passed?
+          }
+          firstParameter = false;
+        }
+        accumulator = iterator(accumulator, key);
+      }
+    }
+
+    return accumulator;
+
   };
 
   // Determine if the array or object contains a given value (using `===`).
