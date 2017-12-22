@@ -170,18 +170,9 @@
 
     let results = [];
 
-    // For array
-    if(Array.isArray(collection)){
-      for(var i = 0; i < collection.length; i++){
-        results.push(iterator(collection[i], i, collection));
-      }
-
-    // For object
-    } else {
-      for (var key in collection){
-        results.push(iterator(collection[key], key, collection));
-      }
-    }
+    var result = _.each(collection, function(item){
+      results.push(iterator(item));
+    });
 
     return results;
   };
