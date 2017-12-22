@@ -484,6 +484,19 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var currentIdx;
+    var otherIdx;
+    var valueAtCurrentIdx;
+    var newArray = array.slice(0);
+
+    for (currentIdx = newArray.length - 1; currentIdx > 0; currentIdx--) {
+      otherIdx = Math.floor(Math.random() * (currentIdx + 1)); // Randomly generate num within range of remaining indices
+      valueAtCurrentIdx = newArray[currentIdx]; // Store value at index to assign at other index
+      newArray[currentIdx] = newArray[otherIdx]; // Assign one of the other values to the same index
+      newArray[otherIdx] = valueAtCurrentIdx; // Assign value at index to the other value position
+    }
+
+    return newArray;
   };
 
 
