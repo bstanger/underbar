@@ -229,7 +229,7 @@
     // For array
     if(Array.isArray(collection)){
       var i = 0;
-      if(!accumulator && accumulator !== 0){
+      if(!accumulator && accumulator !== 0 && accumulator !== false){
         i = 1;
         accumulator = collection[0];
       }
@@ -242,13 +242,12 @@
       let firstParameter = true;
       for (var key in collection){
         if(firstParameter){
-          if(!accumulator && accumulator !== 0){
+          if(!accumulator && accumulator !== 0 && accumulator !== false){
             accumulator = collection[key];
-            // Note: not sure if the value is intended to be accumulator for an object w/o an accumulator passed?
           }
           firstParameter = false;
         }
-        accumulator = iterator(accumulator, key);
+        accumulator = iterator(accumulator, collection[key]);
       }
     }
 
@@ -260,6 +259,7 @@
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
+
     return _.reduce(collection, function(wasFound, item) {
       if (wasFound) {
         return true;
@@ -272,12 +272,33 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+
+    return _.reduce(collection, function(allTrue, item){
+      if(!allTrue){
+        return false;
+      }
+      if(!iterator){
+        iterator = _.identity;
+      }
+      return !!iterator(item);
+    }, true);
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+
+    return _.reduce(collection, function(anyTrue, item){
+      if(anyTrue){
+        return true;
+      }
+      if(!iterator){
+        iterator = _.identity;
+      }
+      return !!iterator(item);
+    }, false);
   };
 
 
