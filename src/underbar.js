@@ -229,7 +229,7 @@
     // For array
     if(Array.isArray(collection)){
       var i = 0;
-      if(!accumulator && accumulator !== 0 && accumulator !== false){
+      if(accumulator === undefined){
         i = 1;
         accumulator = collection[0];
       }
@@ -242,7 +242,7 @@
       let firstParameter = true;
       for (var key in collection){
         if(firstParameter){
-          if(!accumulator && accumulator !== 0 && accumulator !== false){
+          if(accumulator === undefined){
             accumulator = collection[key];
           }
           firstParameter = false;
@@ -321,11 +321,52 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+
+    if(arguments.length < 1) {
+      return "Error - an object must be passed";
+
+    } else if (arguments.length === 1){
+      if(typeof(obj) === "object"){
+        return obj;
+      } else {
+        return "Error - first item passed must be an object";
+      }
+
+    } else {
+      for(var i = 1; i < arguments.length; i++){
+        for(var key in arguments[i]){
+          obj[key] = arguments[i][key];
+        }
+      }
+      return obj;
+    }
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+
+    if(arguments.length < 1) {
+      return "Error - an object must be passed";
+
+    } else if (arguments.length === 1){
+      if(typeof(obj) === "object"){
+        return obj;
+      } else {
+        return "Error - first item passed must be an object";
+      }
+
+    } else {
+      for(var i = 1; i < arguments.length; i++){
+        for(var key in arguments[i]){
+          if(obj[key] === undefined){
+            obj[key] = arguments[i][key];
+          }
+        }
+      }
+      return obj;
+    }
+
   };
 
 
