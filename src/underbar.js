@@ -392,7 +392,7 @@
     return function() {
       if (!alreadyCalled) {
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
-        // infromation from one function call to another.
+        // information from one function call to another.
         result = func.apply(this, arguments);
         alreadyCalled = true;
       }
@@ -410,6 +410,42 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var result;
+    var paramsStored;
+
+    return function(params){
+
+      // For primitive type
+      if(typeof(params) !== "object" && params !== paramsStored){
+        paramsStored = params;
+        result = func.apply(this, arguments);
+
+      // For reference type
+      } else if (typeof(params) === "object"){
+        var allValuesEqual = true;
+
+        // If no params previously stored, call fresh and store params
+        if(paramsStored === undefined){
+          allValuesEqual = false;
+
+        } else {
+          // Note: Attempted to use _.every here instead of for loop, but couldn't pass index
+          _.each(params, function(item, index) {
+            if (params[index] !== paramsStored[index]) {
+              allValuesEqual = false;
+            }
+          });
+
+        }
+        if(!allValuesEqual || params.length !== paramsStored.length){
+          paramsStored = params;
+          result = func.apply(this, arguments);
+        }
+      }
+
+      return result;
+    }
+
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -419,6 +455,21 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var isPending = true;
+
+    if(arguments.length < 3){
+      setTimeout(function(){
+        func.apply(this);
+        isPending = false;
+      }, wait);
+
+    } else {
+      var parameters = [arguments[2], arguments[3]];
+      setTimeout(function(){
+        func.apply(this, parameters);
+        isPending = false;
+      }, wait);
+    }
   };
 
 
